@@ -14,21 +14,11 @@ There have been frequent requests from users of `navigator.storage.estimate()` t
 ## Proposed Solution
 In addition to providing an overall quota and usage, a call to `storage.estimate()` will also provide an estimate of the usage by each quota-managed storage system. The proposed change adds another member, `usageDetails` to the dictionary returned by `navigator.storage.estimate()`.  This new dictonary will contain key-value pairs showing the usage of each storage system, where the keys are the names of the storage systems and the value is an estimate, in bytes, of how much disk space said system is using. 
 
-```
-await navigator.storage.estimate();
-
-//  {
-//    quota: 440922000000,
-//    usage: 27300000,
-//    usageDetails: {
-//      indexedDB: 676000,
-//      caches: 26500000,
-//      serviceWorkerRegistrations: 52800,
-//      other: 0
-//    }
-//  }
-
-```
+<p align="center">
+<img src="https://github.com/jarryd999/quota-usage-details/blob/master/UsageDetails.png?raw=true" />
+<br/>
+Figure 1: Example use the API that highlights how usageDetails mirrors devtools' usage report
+</p>
 
 ## Caveats Worth Mentioning
 The dictionary will omit any pair in which the usage is 0. This lets developers worry only about the storage systems they use and avoids breaking the web when storage systems are deprecated.
