@@ -21,11 +21,11 @@ Figure 1: Example use the API that highlights how usageDetails mirrors devtools'
 </p>
 
 ## Caveats Worth Mentioning
-The dictionary will omit any pair in which the usage is 0. This lets developers worry only about the storage systems they use and avoids breaking the web when storage systems are deprecated.
+1. The dictionary will omit any pair in which the usage is 0. This lets developers worry only about the storage systems they use and avoids breaking the web when storage systems are deprecated. The cost to this decision is that developers might not know that there are storage systems missing from the usage details dictionary. It's not obvious that the total usage might differ from the sum of the usageDetails members. Developers would also run into issues if they wrote things like `usageDetails.caches + usageDetails.indexedDB` which, if the usage for either of those was 0, would return `NaN`.  Instead, developers would have to be defensive and write something like `usageDetails.caches || 0 + usageDetails.indexedDB || 0`. 
 
-The cost to this decision is that developers might not know that there are storage systems missing from the usage details dictionary. It's not obvious that the total usage might differ from the sum of the usageDetails members. This is something that can be addressed via documentation. An alternative is to have an other property on usageDetails that's literally total - Sum(usageDetails).
+2. It's not obvious that the total usage might differ from the sum of the usageDetails members. Today, this could be due to storage systems whose usage isn't reported. In the future, there may be overhead, or we may not be able to attribute usage with 100% accuracy. This is something that can be addressed via documentation. An alternative is to have an `other` property on `usageDetails` that's literally `total - Sum(usageDetails)`.
 
-localStorage is not counted in the quota. I think we should address this via documentation, and not change the API shape. An alternative is to add a usageDetails.localStorage that's always set to zero.
+3. localStorage is not counted in the quota. I think we should address this via documentation, and not change the API shape. An alternative is to add a usageDetails.localStorage that's always set to zero.
 
 ## Alternatives Considered
 
