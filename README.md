@@ -21,18 +21,18 @@ Figure 1: Example use the API that highlights how usageDetails mirrors devtools'
 </p>
 
 ## Caveats Worth Mentioning
-1. The dictionary will omit any pair in which the usage is 0. This lets developers worry only about the storage systems they use and avoids breaking the web when storage systems are deprecated. The cost to this decision is that developers might not know that there are storage systems missing from the usage details dictionary. It's not obvious that the total usage might differ from the sum of the usageDetails members. Developers would also run into issues if they wrote things like `usageDetails.caches + usageDetails.indexedDB` which, if the usage for either of those was 0, would return `NaN`.  Instead, developers would have to be defensive and write something like `usageDetails.caches || 0 + usageDetails.indexedDB || 0`. 
+1. The dictionary will omit any pair in which the usage is 0. This lets developers worry only about the storage systems they use and avoids breaking the web when storage systems are deprecated. The cost to this decision is that developers might not know that there are storage systems missing from the usage details dictionary. Developers would also run into issues if they wrote things like `usageDetails.caches + usageDetails.indexedDB` which, if the usage for either of those was 0, would return `NaN`.  Instead, developers would have to be defensive and write something like `(usageDetails.caches || 0) + (usageDetails.indexedDB || 0)`. 
 
-2. It's not obvious that the total usage might differ from the sum of the usageDetails members. Today, this could be due to storage systems whose usage isn't reported. In the future, there may be overhead, or we may not be able to attribute usage with 100% accuracy. This is something that can be addressed via documentation. An alternative is to have an `other` property on `usageDetails` that's literally `total - Sum(usageDetails)`.
+2. It's not obvious that the total usage might differ from the sum of the `usageDetails` members. Today, this could be due to storage systems whose usage isn't reported. In the future, there may be overhead, or we may not be able to attribute usage with 100% accuracy. This is something that can be addressed via documentation. An alternative is to have an `other` property on `usageDetails` that's literally `total - Sum(usageDetails)`.
 
-3. localStorage is not counted in the quota. I think we should address this via documentation, and not change the API shape. An alternative is to add a usageDetails.localStorage that's always set to zero.
+3. `DOMStorage` (`localStorage`) is not counted in the quota. This can be addressed via documentation rather than a change to the API shape.
 
 ## Alternatives Considered
 
-1. Expose subsystems with 0 usage.
+1. Expose storage systems with 0 usage.
    * Benefit: the API shape is intuitive.
    * Cost: we can't measure if we can remove storage systems without breaking the Web.
 
-2. Expose a synchronous storage.getUsageDetails() function that takes storage system name as a paramter and returns usage.  This would return 0 for unknown categories.
+2. Expose a synchronous storage.getUsageDetails() function that takes the storage system name as a parameter and returns usage.  This would return 0 for unknown categories.
    * Benefit: storage.getUsageDetails('fileSystem') will work correctly whether the browser supports a file system API or not.
    * Cost: the param values are not discoverable.
