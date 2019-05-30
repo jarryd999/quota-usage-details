@@ -51,3 +51,11 @@ Figure 1: Example use of the API from the Chrome devtools console, demonstrating
 2. Expose a synchronous storage.getUsageDetails() function that takes the storage system name as a parameter and returns usage.  This would return 0 for unknown categories.
    * Benefit: storage.getUsageDetails('fileSystem') will work correctly whether the browser supports a file system API or not.
    * Cost: the param values are not discoverable.
+
+## Security and Privacy Concerns
+
+#### Exposing new data
+Per-system quota usage (IndexedDB vs Cache Storage vs AppCache etc.) is a function of all calls made by an origin to the respective storage APIs. The numbers summarize information that the origin already has. An origin can monitor the change in total quota with every storage API call to keep a running total.
+
+#### User identification/tracking
+An origin that has data stored on the client (non-zero quota usage) can store a unique identifier for the user. Instead of using this new API, the origin can simply read a user ID from IndexedDB, or from Cache Storage etc. In other words, the new API does not make it any easier to identify or track users.
