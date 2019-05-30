@@ -18,6 +18,10 @@ No
 ### 3.5. Does this specification expose any other data to an origin that it doesn’t currently have access to?
 No.  Right now, an origin can determine usage broken down by storage system by keeping track of the changes in total usage with each storage system operation.
 
+Angle 1 (exposing new data): Per-system quota usage (IndexedDB vs Cache Storage vs AppCache etc.) is a function of all calls made by an origin to the respective storage APIs. The numbers summarize information that the origin already has. An origin can monitor the change in total quota with every storage API call to keep a running total.
+
+Angle 2 (user identification/tracking): An origin that has data stored on the client (non-zero quota usage) can store a unique identifier for the user. Instead of using this new API, the origin can simply read a user ID from IndexedDB, or from Cache Storage etc. In other words, the new API does not make it any easier to identify or track users.
+
 ### 3.6. Does this specification enable new script execution/loading mechanisms?
 No
 
